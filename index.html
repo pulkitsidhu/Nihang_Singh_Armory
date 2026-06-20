@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>NIHANG SINGH ARMORY</title>
+  <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@100;300;400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg-dark:#0d0c07;
+      --bg-light:#f4ede0;
+      --gold:#d4a832;
+      --dark-text-light:#2a1800;
+      --muted-dark:#7a6a40;
+      --muted-light:#5a4830;
+      --subtle-dark:#2a2210;
+      --subtle-light:#c8b888;
+      --logo-color:#3a2c10;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; background:var(--bg-dark); color:var(--muted-dark);}
+    /* Header */
+    header{position:sticky;top:0;z-index:100;background:transparent;border-bottom:0.5px solid var(--subtle-dark);padding:14px 28px;display:flex;align-items:center;justify-content:space-between}
+    #logo-slot{font-family:'Josefin Sans',sans-serif;font-weight:300;color:var(--gold);letter-spacing:0.18em;font-size:0.95rem;text-transform:uppercase;opacity:0.95}
+    .armory-bold{font-weight:400}
+    #search-toggle{background:transparent;border:0;color:var(--logo-color);cursor:pointer}
+    #search-wrap{position:relative}
+    #search-input{position:absolute;right:0;top:50%;transform:translateY(-50%) translateX(110%);opacity:0;transition:all .28s ease;padding:6px 10px;border-radius:2px;border:0.5px solid var(--subtle-dark);background:#1a1810;color:#c8b888}
+    #search-wrap.open #search-input{transform:translateY(-50%) translateX(0);opacity:1}
+
+    /* Hero */
+    .hero{position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden}
+    #hero-video{position:absolute;inset:0;object-fit:cover;width:100%;height:100%;background:var(--bg-dark)}
+    .hero::after{content:"";position:absolute;inset:0;background:rgba(5,4,2,0.65)}
+    .hero-content{position:relative;z-index:2;text-align:center;color:var(--muted-dark);max-width:900px;padding:0 1rem}
+    .ornament{font-family:'Josefin Sans';font-weight:100;color:#8a7040;letter-spacing:0.3em;margin-bottom:12px;opacity:0;transform:translateY(8px);}
+    .brand{font-family:'Josefin Sans';font-weight:100;color:var(--gold);letter-spacing:0.2em;font-size:48px;margin:12px 0 0;opacity:0;transform:translateY(8px)}
+    .divider-gold{width:40px;height:0.5px;background:var(--gold);opacity:0;margin:16px auto}
+    .tagline{font-family:'Josefin Sans';font-weight:100;color:#8a7040;letter-spacing:0.15em;font-size:13px;margin-top:18px;opacity:0}
+    .hero-desc{font-family:Inter;font-weight:300;color:#5a4a28;max-width:480px;margin:24px auto 0;opacity:0}
+    .chevron{position:absolute;left:50%;transform:translateX(-50%);bottom:28px;color:var(--gold);width:34px;height:34px;cursor:pointer;opacity:1;filter:drop-shadow(0 0 8px rgba(212,168,50,0.35));transition:transform .2s ease,opacity .2s ease}
+    .chevron:hover,.chevron:focus{transform:translateX(-50%) translateY(-2px);opacity:1}
+    .skip-link{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
+    .skip-link:focus{position:static;left:auto;top:auto;width:auto;height:auto;padding:8px 12px;background:#fff;color:#000;z-index:999}
+    #no-results{display:none;text-align:center;padding:4rem 1rem;font-family:'Josefin Sans';color:#3a2c10}
+    .footer-left{font-family:'Josefin Sans';font-weight:300;letter-spacing:0.18em;color:var(--gold);font-size:11px}
+    .footer-right{font-family:Inter;font-size:11px;color:#2a2010}
+    .modal-sub{font-family:Inter;font-size:10px;color:#4a3a18;margin-top:6px}
+    .close-modal{background:transparent;border:0;color:#3a2c10;font-size:18px;cursor:pointer}
+    .field-label{margin-top:12px;font-family:'Josefin Sans';font-size:9px;letter-spacing:0.1em;color:#4a3a18}
+    .regarding{margin-top:6px}
+    .field-small{font-family:'Josefin Sans';font-size:9px;color:#4a3a18}
+    .small-note{font-size:10px;color:#3a2c10}
+    .message-row{margin-top:8px}
+    .title-light{color:var(--dark-text-light)}
+    .title-dark{color:var(--gold)}
+    .modal textarea{resize:none;margin-top:6px}
+
+    /* Gallery blocks */
+    main{margin:0}
+    .sword-block{padding:0;border-top:0}
+    .sword-grid{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center}
+    .content-wrap{max-width:1400px;margin:0 auto;padding:0 4rem;width:100%}
+    @media (min-width: 1400px){.content-wrap{padding:0 4rem}}
+    @media (min-width: 768px) and (max-width: 1399px){.content-wrap{padding:0 3rem}}
+    @media (max-width: 767px){.content-wrap{padding:0 1.25rem}}
+    .sword-block.dark,.sword-block.light{padding-top:3.5rem;padding-bottom:3.5rem}
+    .sword-block.light{background:var(--bg-light);color:var(--dark-text-light);border-top:0}
+    .sword-block.light .origin-line{color:#8a7040}
+    .sword-block.light .sword-title{color:var(--dark-text-light)}
+    .sword-block.light .gold-small{background:rgba(136,96,48,0.5)}
+    .sword-block.light .story{color:#5a4830}
+    .sword-block.dark{background:var(--bg-dark);color:var(--muted-dark)}
+    .sword-block.dark .contact-btn{color:var(--muted-dark);border-color:var(--muted-dark)}
+    .sword-block.dark .contact-btn:hover,.sword-block.dark .contact-btn:focus{background:rgba(58,44,16,0.14)}
+    .sword-image{aspect-ratio:3/4;max-width:420px;width:100%;max-height:65vh;background:#111;border:0.5px solid var(--subtle-dark);display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;cursor:pointer;overflow:hidden}
+    .sword-image img.sword-photo{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;display:block}
+    .thumb-strip{display:flex;gap:6px;margin-top:8px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+    .thumb-strip::-webkit-scrollbar{display:none}
+    .thumb{width:36px;height:36px;flex-shrink:0;border-radius:2px;overflow:hidden;cursor:pointer;border:0.5px solid transparent;opacity:0.45;transition:opacity 0.15s}
+    .thumb img{width:100%;height:100%;object-fit:cover;display:block}
+    .thumb:hover{opacity:0.75}
+    .sword-block.dark .thumb.active{border:1px solid #d4a832;opacity:1}
+    .sword-block.light .thumb.active{border:1px solid #8a6030;opacity:1}
+    .sword-text{display:flex;flex-direction:column;gap:18px}
+    .origin-line{font-family:'Josefin Sans';font-weight:100;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:#4a3a18;margin-bottom:10px}
+    .sword-title{font-family:'Josefin Sans';font-weight:100;font-size:28px;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);margin-top:0}
+    .sword-block.dark .origin-line{color:var(--muted-dark)}
+    .gold-small{width:28px;height:0.5px;background:var(--gold);opacity:0.4;margin-top:8px}
+    .story{font-family:Inter;font-weight:300;font-size:13px;line-height:1.75;color:var(--muted-dark);margin-bottom:14px}
+    .specs{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:14px}
+    .specs .chip{font-family:'Josefin Sans';font-weight:100;font-size:10px;text-transform:uppercase}
+    .contact-btn{display:inline-flex;align-items:center;gap:7px;font-family:'Josefin Sans';font-weight:100;font-size:10px;letter-spacing:0.18em;padding:10px 18px;border-radius:2px;background:transparent;border:0.5px solid var(--subtle-dark);cursor:pointer}
+    .contact-btn{min-height:44px}
+
+    /* About */
+    .about{background:var(--bg-dark);border-top:0.5px solid #1a1408;padding:4rem 4rem;color:#5a4a28}
+    .about .label{font-family:'Josefin Sans';font-weight:100;font-size:10px;letter-spacing:0.15em;color:#3a2c10}
+    .about .title{font-family:'Josefin Sans';font-weight:100;font-size:22px;color:var(--gold);margin-bottom:16px}
+    .about p{font-family:Inter;font-weight:300;max-width:560px;line-height:1.8}
+
+    footer{background:#080807;border-top:0.5px solid #1a1408;padding:1.25rem 2rem;display:flex;justify-content:space-between;align-items:center;color:#2a2010}
+
+    /* Modal */
+    .overlay{position:fixed;inset:0;background:rgba(0,0,0,0.88);display:flex;align-items:center;justify-content:center;z-index:200;opacity:0;pointer-events:none;transition:opacity .2s ease}
+    .overlay.show{opacity:1;pointer-events:auto}
+    .modal{background:#111009;border:0.5px solid var(--subtle-dark);border-radius:4px;padding:1.75rem;max-width:400px;width:90%;color:#c8b888;opacity:0;transform:translateY(6px);transition:opacity .2s ease,transform .2s ease}
+    .overlay.show .modal{opacity:1;transform:none;transition-delay:.2s}
+    .modal .modal-header{display:flex;align-items:center;justify-content:space-between;gap:8px}
+    .modal .label{font-family:'Josefin Sans';font-weight:100;color:var(--gold);font-size:13px;letter-spacing:0.18em}
+    .modal input,.modal textarea{background:#1a1810;border:0.5px solid #2a2210;border-radius:2px;padding:8px 10px;color:#c8b888;font-size:12px;width:100%;box-sizing:border-box}
+    /* Space between modal form field groups */
+    .modal-field-group{margin-bottom:16px}
+    .modal-field-group:last-of-type{margin-bottom:10px}
+    .modal textarea{font-family:'Inter', sans-serif}
+    .modal .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .modal .send-wrap{display:flex;justify-content:flex-end;margin-top:4px}
+    .send-btn{font-family:'Josefin Sans';font-weight:100;font-size:9px;letter-spacing:0.18em;padding:7px 18px;border-radius:2px;border:0.5px solid var(--gold);color:var(--gold);background:transparent;cursor:pointer}
+    .send-btn.sending{border-color:#2a2210;color:#3a3020;pointer-events:none}
+
+    /* Placeholder image */
+    .placeholder{display:flex;flex-direction:column;align-items:center;gap:8px;color:#c8b888}
+    .sword-svg{width:56px;height:56px}
+
+    @media (max-width:767px){
+      .sword-block{padding-top:2rem;padding-bottom:2rem}
+      .sword-grid{grid-template-columns:1fr;padding:0}
+      .content-wrap{padding:0 1.25rem}
+      .sword-image{aspect-ratio:16/9}
+      .brand{font-size:28px}
+      .sword-title{font-size:20px}
+      header{padding:10px 16px}
+    }
+
+    @media (prefers-reduced-motion: no-preference){
+      .ornament{animation:fadeUp .6s ease forwards .0s}
+      .brand{animation:fadeUp .6s ease forwards .5s}
+      .divider-gold{animation:fadeUp .6s ease forwards 1s}
+      .tagline{animation:fadeUp .6s ease forwards 1.5s}
+      .hero-desc{animation:fadeUp .6s ease forwards 2s}
+      @keyframes fadeUp{to{opacity:1;transform:none}}
+      @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(7px)}}
+      .chevron{animation:bounce 2s infinite}
+    }
+  </style>
+</head>
+<body>
+  <a href="#gallery" class="skip-link">Skip to main content</a>
+  <header>
+    <div class="content-wrap" style="display:flex;align-items:center;justify-content:space-between;">
+      <div id="logo-slot">NIHANG SINGH <span class="armory-bold">ARMORY</span></div>
+      <div id="search-wrap">
+        <button id="search-toggle" type="button" aria-expanded="false" aria-label="Search">
+        <!-- inline magnifier -->
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 21l-4.35-4.35" stroke="#3a2c10" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="11" cy="11" r="6" stroke="#3a2c10" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <input id="search-input" type="search" placeholder="Search the collection…" aria-label="Search the collection">
+    </div>
+    </div>
+  </header>
+
+  <section class="hero" id="hero">
+    <video id="hero-video" muted loop playsinline>
+      <source src="images/Hero.mp4" type="video/mp4">
+    </video>
+    <div class="hero-content">
+      <div class="ornament">Est. — The Khalsa Tradition</div>
+      <div class="brand">NIHANG SINGH <span class="armory-bold">ARMORY</span></div>
+      <div class="divider-gold"></div>
+      <div class="tagline">CENTURIES OF STEEL · LEGACY OF THE FEARLESS</div>
+      <p class="hero-desc">A curated collection of antique blades honoring the sovereign warrior tradition of the Nihang — guardians of the Khalsa, keepers of the eternal flame.</p>
+    </div>
+    <div class="chevron" id="chev" aria-hidden="true">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+  </section>
+
+  <main id="gallery" role="main">
+    <!-- Static fallback content so basic viewing works without JS -->
+    <section class="sword-block dark" data-id="mughal-talwar-001">
+      <div class="content-wrap">
+        <div class="sword-grid">
+          <div class="sword-image" data-images='["mughal-talwar-001-1.jpg","mughal-talwar-001-2.jpg","mughal-talwar-001-3.jpg"]'>
+            <div class="placeholder">
+              <svg class="sword-svg" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><path d="M32 2L38 8 26 20" stroke="#c8b888" stroke-width="2" fill="none"/></svg>
+              <div>Photo coming soon</div>
+            </div>
+          </div>
+          <div class="sword-text">
+            <div>
+              <div class="origin-line">India · 17th Century</div>
+              <div class="sword-title">Mughal Talwar</div>
+              <div class="gold-small"></div>
+            </div>
+            <div class="story">A rare curved cavalry sword forged in Damascus steel, bearing an ivory hilt inlaid with gold koftgari work. Once carried by a Nihang commander of the Khalsa Army during the reign of Guru Gobind Singh.</div>
+            <div class="specs"><span class="chip">· Damascus steel</span><span class="chip">· 36 inches</span><span class="chip">· Excellent condition</span></div>
+            <div><button type="button" class="contact-btn" data-sword="Mughal Talwar">✉ CONTACT US</button></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="sword-block light" data-id="katana-shinto-002">
+      <div class="content-wrap">
+        <div class="sword-grid">
+          <div class="sword-text">
+            <div>
+              <div class="origin-line">Japan · Edo Period c. 1780</div>
+              <div class="sword-title">Katana — Shintō Period</div>
+              <div class="gold-small"></div>
+            </div>
+            <div class="story">A signed blade by a Bizen school swordsmith with a distinctive gunome-midare hamon. The handle is wrapped in original same and silk tsuka-ito — museum grade preservation.</div>
+            <div class="specs"><span class="chip">· Tamahagane steel</span><span class="chip">· 28 inches</span><span class="chip">· Museum grade</span></div>
+            <div><button type="button" class="contact-btn" data-sword="Katana — Shintō Period">✉ CONTACT US</button></div>
+          </div>
+          <div class="sword-image" data-images='["katana-shinto-002-1.jpg","katana-shinto-002-2.jpg"]'>
+            <div class="placeholder">
+              <svg class="sword-svg" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><path d="M32 2L38 8 26 20" stroke="#3a2c888" stroke-width="2" fill="none"/></svg>
+              <div>Photo coming soon</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="sword-block dark" data-id="european-longsword-003">
+      <div class="content-wrap">
+        <div class="sword-grid">
+          <div class="sword-image" data-images='["european-longsword-003-1.jpg"]'>
+            <div class="placeholder">
+              <svg class="sword-svg" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><path d="M32 2L38 8 26 20" stroke="#c8b888" stroke-width="2" fill="none"/></svg>
+              <div>Photo coming soon</div>
+            </div>
+          </div>
+          <div class="sword-text">
+            <div>
+              <div class="origin-line">Germany · 15th Century</div>
+              <div class="sword-title">Medieval Longsword</div>
+              <div class="gold-small"></div>
+            </div>
+            <div class="story">A hand-and-a-half longsword of German origin, bearing a wheel pommel and cross guard typical of the late medieval period. The blade retains its original fuller and period-correct proportions.</div>
+            <div class="specs"><span class="chip">· High carbon steel</span><span class="chip">· 48 inches</span><span class="chip">· Good condition</span></div>
+            <div><button type="button" class="contact-btn" data-sword="Medieval Longsword">✉ CONTACT US</button></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div id="no-results">No pieces found.</div>
+  </main>
+
+  <section class="about">
+    <div class="content-wrap">
+      <div class="label">THE COLLECTOR</div>
+      <div class="title">ABOUT THE ARMORY</div>
+      <p>This collection is a lifelong pursuit of preserving the martial heritage of the Nihang Singh — the sovereign warrior order of the Khalsa. Each blade is chosen not only for its craftsmanship but for its place in a living history that stretches across centuries and continents.</p>
+    </div>
+  </section>
+
+  <footer>
+    <div class="content-wrap" style="display:flex;align-items:center;justify-content:space-between;">
+      <div class="footer-left">NIHANG SINGH <span class="armory-bold">ARMORY</span></div>
+      <div class="footer-right">© 2026 nihangsingh.com</div>
+    </div>
+  </footer>
+
+  <!-- Contact modal -->
+  <div class="overlay" id="overlay">
+    <div class="modal" role="dialog" aria-modal="true">
+      <div class="modal-header">
+        <div>
+          <div class="label">CONTACT US</div>
+          <div id="modal-sub" class="modal-sub"></div>
+        </div>
+        <button id="close-modal" type="button" aria-label="Close" class="close-modal">✕</button>
+      </div>
+      <form id="contact-form" action="https://formspree.io/f/xvzneedo" method="POST">
+        <div class="modal-field-group">
+          <input id="regarding" name="sword" type="text" readonly value="" class="regarding">
+        </div>
+        <div class="modal-field-group">
+          <div class="row">
+            <div>
+              <div class="field-small">EMAIL ADDRESS</div>
+              <input name="email" type="email" placeholder="your@email.com" required>
+            </div>
+            <div>
+              <div class="field-small">PHONE <span class="field-small small-note">(optional)</span></div>
+              <input name="phone" type="tel" placeholder="+1 (000) 000-0000">
+            </div>
+          </div>
+        </div>
+        <div class="modal-field-group">
+          <div class="field-small">MESSAGE</div>
+          <textarea name="message" rows="3" placeholder="I'm interested in learning more about this piece…" style="resize:none; font-family:'Inter',sans-serif"></textarea>
+        </div>
+        <div class="modal-field-group">
+          <div class="send-wrap">
+            <button type="submit" class="send-btn" id="send-btn">SEND MESSAGE</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // Basic interactive behaviors
+    (function(){
+      const searchWrap = document.getElementById('search-wrap');
+      const searchToggle = document.getElementById('search-toggle');
+      const searchInput = document.getElementById('search-input');
+      const chev = document.getElementById('chev');
+      const gallery = document.getElementById('gallery');
+      const overlay = document.getElementById('overlay');
+      const modal = overlay.querySelector('.modal');
+      const closeModal = document.getElementById('close-modal');
+      const regarding = document.getElementById('regarding');
+      const modalSub = document.getElementById('modal-sub');
+      const form = document.getElementById('contact-form');
+      const sendBtn = document.getElementById('send-btn');
+
+      // search toggle
+      searchToggle.addEventListener('click',()=>{
+        const open = searchWrap.classList.toggle('open');
+        searchToggle.setAttribute('aria-expanded', open);
+        if(open) searchInput.focus();
+      });
+      document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ if(searchWrap.classList.contains('open')){searchWrap.classList.remove('open'); searchToggle.setAttribute('aria-expanded',false)} if(overlay.classList.contains('show')) closeOverlay(); }});
+
+      // chevron scroll
+      chev.addEventListener('click',()=>{document.querySelector('#gallery').scrollIntoView({behavior:'smooth'})});
+
+      // contact modal
+      function openModal(swordName, btn){
+        regarding.value = swordName;
+        modalSub.textContent = swordName;
+        overlay.classList.add('show');
+        document.body.style.overflow='hidden';
+      }
+      function closeOverlay(){overlay.classList.remove('show');document.body.style.overflow='';}
+      closeModal.addEventListener('click',closeOverlay);
+      overlay.addEventListener('click',e=>{ if(e.target===overlay) closeOverlay(); });
+
+      // contact buttons
+      document.querySelectorAll('.contact-btn').forEach(btn=>{
+        const name = btn.getAttribute('data-sword');
+        const key = 'sent_'+(name||'').replace(/\s+/g,'_');
+        if(sessionStorage.getItem(key)){
+          btn.textContent='✓ MESSAGE SENT';
+          btn.classList.add('sent');
+          btn.style.border='0.5px solid #2a3a18';btn.style.color='#4a6a28';btn.style.background='#0d1408';
+        } else {
+          btn.addEventListener('click',()=>openModal(name,btn));
+        }
+      });
+
+      // form submission (Formspree)
+      form.addEventListener('submit', async (e)=>{
+        e.preventDefault();
+        sendBtn.classList.add('sending');
+        const data = new FormData(form);
+        try{
+          const res = await fetch(form.action, {method:'POST',body:data,headers:{'Accept':'application/json'}});
+          if(res.ok || res.status===200){
+            // mark button that opened modal as sent
+            const swordName = data.get('sword');
+            document.querySelectorAll('.contact-btn').forEach(btn=>{ if(btn.getAttribute('data-sword')===swordName){ btn.textContent='✓ MESSAGE SENT'; btn.style.border='0.5px solid #2a3a18';btn.style.color='#4a6a28';btn.style.background='#0d1408'; sessionStorage.setItem('sent_'+swordName.replace(/\s+/g,'_'),'1'); } });
+            closeOverlay();
+          } else { console.warn('Formspree responded with',res.status); closeOverlay(); }
+        }catch(err){console.error(err);closeOverlay();}
+        sendBtn.classList.remove('sending');
+      });
+
+      // fetch swords.json and render (enhances static content)
+      async function loadAndRender(){
+        try{
+          const res = await fetch('./swords.json');
+          if(!res.ok) return;
+          const data = await res.json();
+          data.sort((a,b)=>a.order-b.order);
+          // clear existing and render fresh
+          gallery.innerHTML='';
+          data.forEach((s,idx)=>{
+            const isEven = ((s.order||idx+1)%2===0);
+            const section = document.createElement('section');
+            section.className = 'sword-block '+(isEven? 'light':'dark');
+            section.setAttribute('data-id', s.id);
+
+            const imgWrap = document.createElement('div');
+            imgWrap.className='sword-image';
+            imgWrap.dataset.images = JSON.stringify(s.images||[]);
+            const images = s.images||[];
+            const placeholder = document.createElement('div');
+            placeholder.className='placeholder';
+            placeholder.style.display = 'none';
+            placeholder.innerHTML = '<svg class="sword-svg" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><path d="M32 2L38 8 26 20" stroke="#c8b888" stroke-width="2" fill="none"/></svg><div>Photo coming soon</div>';
+            if(images.length){
+              const imgEl = document.createElement('img');
+              imgEl.className = 'sword-photo main-image';
+              imgEl.src = './images/'+images[0];
+              imgEl.alt = s.name;
+              imgEl.addEventListener('load', ()=>{ imgEl.style.display=''; placeholder.style.display='none'; });
+              imgEl.addEventListener('error', ()=>{ imgEl.style.display='none'; placeholder.style.display='flex'; });
+              imgWrap.appendChild(imgEl);
+              imgWrap.appendChild(placeholder);
+            } else {
+              placeholder.style.display = 'flex';
+              imgWrap.appendChild(placeholder);
+            }
+            let thumbStrip = null;
+            if(images.length > 1){
+              thumbStrip = document.createElement('div');
+              thumbStrip.className = 'thumb-strip';
+              images.forEach((imageName, i)=>{
+                const thumb = document.createElement('div');
+                thumb.className = 'thumb';
+                thumb.dataset.index = i;
+                const thumbImg = document.createElement('img');
+                thumbImg.src = './images/'+imageName;
+                thumbImg.alt = s.name + ' thumbnail ' + (i+1);
+                thumbImg.addEventListener('error', ()=>{
+                  thumbImg.style.display='none';
+                  if(!thumb.querySelector('.placeholder')){
+                    const ph = document.createElement('div');
+                    ph.className='placeholder';
+                    ph.innerHTML = '<svg class="sword-svg" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><path d="M32 2L38 8 26 20" stroke="#c8b888" stroke-width="2" fill="none"/></svg><div>Photo coming soon</div>';
+                    thumb.appendChild(ph);
+                  }
+                });
+                thumb.appendChild(thumbImg);
+                thumbStrip.appendChild(thumb);
+              });
+            }
+
+            const text = document.createElement('div'); text.className='sword-text';
+            const top = document.createElement('div');
+            // build top block without inline styles; apply modifier class for even/odd
+            const originDiv = '<div class="origin-line">'+escapeHtml(s.origin)+' · '+escapeHtml(s.era)+'</div>';
+            const titleClass = 'sword-title '+(isEven? 'title-light':'title-dark');
+            const titleDiv = '<div class="'+titleClass+'">'+escapeHtml(s.name)+'</div>';
+            top.innerHTML = originDiv + titleDiv + '<div class="gold-small"></div>';
+            const story = document.createElement('div'); story.className='story'; story.textContent = s.story;
+            const specs = document.createElement('div'); specs.className='specs'; (s.specs||[]).forEach(sp=>{ const spn=document.createElement('span'); spn.className='chip'; spn.textContent='· '+sp; specs.appendChild(spn); });
+            const btnWrap = document.createElement('div'); const btn = document.createElement('button'); btn.className='contact-btn'; btn.setAttribute('data-sword', s.name); btn.textContent='✉ CONTACT US';
+            btnWrap.appendChild(btn);
+            text.appendChild(top); text.appendChild(story); text.appendChild(specs); text.appendChild(btnWrap);
+
+            const imageColumn = document.createElement('div');
+            imageColumn.appendChild(imgWrap);
+            if(thumbStrip) imageColumn.appendChild(thumbStrip);
+
+            const contentWrapEl = document.createElement('div');
+            contentWrapEl.className = 'content-wrap';
+            const grid = document.createElement('div');
+            grid.className = 'sword-grid';
+            if(isEven){ grid.appendChild(text); grid.appendChild(imageColumn); } else { grid.appendChild(imageColumn); grid.appendChild(text); }
+            contentWrapEl.appendChild(grid);
+            section.appendChild(contentWrapEl);
+            gallery.appendChild(section);
+            initGallery(section, images);
+          });
+
+          // wire contact buttons
+          document.querySelectorAll('.contact-btn').forEach(btn=>{
+            const name = btn.getAttribute('data-sword');
+            const key = 'sent_'+(name||'').replace(/\s+/g,'_');
+            if(sessionStorage.getItem(key)){
+              btn.textContent='✓ MESSAGE SENT';btn.style.border='0.5px solid #2a3a18';btn.style.color='#4a6a28';btn.style.background='#0d1408';
+            } else btn.addEventListener('click',()=>openModal(name,btn));
+          });
+
+          // search filtering
+          searchInput.addEventListener('input', ()=>{
+            const q = searchInput.value.trim().toLowerCase();
+            let any=false;
+            document.querySelectorAll('.sword-block').forEach(sec=>{
+              const txt = (sec.textContent||'').toLowerCase();
+              if(!q || txt.indexOf(q)!==-1){ sec.style.display='grid'; any=true;} else sec.style.display='none';
+            });
+            document.getElementById('no-results').style.display = any? 'none':'block';
+          });
+
+        }catch(err){console.warn('Could not load swords.json',err)}
+      }
+
+      function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"})[c])}
+
+      function initGallery(swordEl, images){
+        if(images.length <= 1) return;
+        let current = 0;
+        const mainImg = swordEl.querySelector('.main-image');
+        const placeholder = swordEl.querySelector('.placeholder');
+        const thumbs = Array.from(swordEl.querySelectorAll('.thumb'));
+        function goTo(index){
+          current = (index + images.length) % images.length;
+          if(mainImg){
+            mainImg.src = './images/' + images[current];
+            mainImg.style.display = '';
+            if(placeholder) placeholder.style.display = 'none';
+          }
+          thumbs.forEach((t,i)=> t.classList.toggle('active', i===current));
+        }
+        if(mainImg){
+          mainImg.addEventListener('click', ()=> goTo(current + 1));
+          let touchStartX = 0;
+          mainImg.addEventListener('touchstart', e=>{ touchStartX = e.touches[0].clientX; }, { passive: true });
+          mainImg.addEventListener('touchend', e=>{
+            const diff = touchStartX - e.changedTouches[0].clientX;
+            if(Math.abs(diff) > 40) goTo(current + (diff > 0 ? 1 : -1));
+          }, { passive: true });
+        }
+        thumbs.forEach((t,i)=> t.addEventListener('click', ()=> goTo(i)));
+        goTo(0);
+      }
+
+      // try to autoplay hero video via JS (validator forbids autoplay attribute)
+      const hv = document.getElementById('hero-video');
+      if(hv && typeof hv.play === 'function') hv.play().catch(()=>{});
+      loadAndRender();
+    })();
+  </script>
+</body>
+</html>
