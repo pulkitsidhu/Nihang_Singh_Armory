@@ -39,7 +39,7 @@ Ask the user for each field in turn:
 - `era`
 - `specs` (up to 4 values)
 - `story`
-- `images`
+- `images` (ask for image filename(s) in the S3 bucket, e.g. `mughal-talwar-004-1.jpg`)
 
 For each field, show the current value and allow the user to provide a new value or say `skip` / leave blank to keep the current value.
 
@@ -47,7 +47,7 @@ For each field, show the current value and allow the user to provide a new value
 
 - Update only the fields the user changed.
 - For `specs`, normalize the response into an array of values.
-- For `images`, normalize the response into an array of filenames.
+- For `images`, normalize the response into an array of S3 image filenames.
 - Keep the `id` the same unless the user explicitly requests an id change, but prefer preserving the existing `id` for consistency if not asked.
 
 ## Step 5 — Save changes

@@ -23,10 +23,6 @@
     header{position:sticky;top:0;z-index:100;background:transparent;border-bottom:0.5px solid var(--subtle-dark);padding:14px 28px;display:flex;align-items:center;justify-content:space-between}
     #logo-slot{font-family:'Josefin Sans',sans-serif;font-weight:300;color:var(--gold);letter-spacing:0.18em;font-size:0.95rem;text-transform:uppercase;opacity:0.95}
     .armory-bold{font-weight:400}
-    #search-toggle{background:transparent;border:0;color:var(--logo-color);cursor:pointer}
-    #search-wrap{position:relative}
-    #search-input{position:absolute;right:0;top:50%;transform:translateY(-50%) translateX(110%);opacity:0;transition:all .28s ease;padding:6px 10px;border-radius:2px;border:0.5px solid var(--subtle-dark);background:#1a1810;color:#c8b888}
-    #search-wrap.open #search-input{transform:translateY(-50%) translateX(0);opacity:1}
 
     /* Hero */
     .hero{position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden}
@@ -37,7 +33,7 @@
     .brand{font-family:'Josefin Sans';font-weight:100;color:var(--gold);letter-spacing:0.2em;font-size:48px;margin:12px 0 0;opacity:0;transform:translateY(8px)}
     .divider-gold{width:40px;height:0.5px;background:var(--gold);opacity:0;margin:16px auto}
     .tagline{font-family:'Josefin Sans';font-weight:100;color:#8a7040;letter-spacing:0.15em;font-size:13px;margin-top:18px;opacity:0}
-    .hero-desc{font-family:Inter;font-weight:300;color:#5a4a28;max-width:480px;margin:24px auto 0;opacity:0}
+    .hero-desc{font-family:Inter;font-weight:300;font-size:12px;color:#5a4a28;max-width:480px;margin:24px auto 0;opacity:0}
     .chevron{position:absolute;left:50%;transform:translateX(-50%);bottom:28px;color:var(--gold);width:34px;height:34px;cursor:pointer;opacity:1;filter:drop-shadow(0 0 8px rgba(212,168,50,0.35));transition:transform .2s ease,opacity .2s ease}
     .chevron:hover,.chevron:focus{transform:translateX(-50%) translateY(-2px);opacity:1}
     .skip-link{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
@@ -60,6 +56,8 @@
     main{margin:0}
     .sword-block{padding:0;border-top:0}
     .sword-grid{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center}
+    .sword-block.dark .sword-grid{grid-template-columns:minmax(0,420px) 1fr}
+    .sword-block.light .sword-grid{grid-template-columns:1fr minmax(0,420px)}
     .content-wrap{max-width:1400px;margin:0 auto;padding:0 4rem;width:100%}
     @media (min-width: 1400px){.content-wrap{padding:0 4rem}}
     @media (min-width: 768px) and (max-width: 1399px){.content-wrap{padding:0 3rem}}
@@ -97,7 +95,8 @@
     .about{background:var(--bg-dark);border-top:0.5px solid #1a1408;padding:4rem 4rem;color:#5a4a28}
     .about .label{font-family:'Josefin Sans';font-weight:100;font-size:10px;letter-spacing:0.15em;color:#3a2c10}
     .about .title{font-family:'Josefin Sans';font-weight:100;font-size:22px;color:var(--gold);margin-bottom:16px}
-    .about p{font-family:Inter;font-weight:300;max-width:560px;line-height:1.8}
+    .about .title strong{font-weight:700}
+    .about p{font-family:Inter;font-weight:300;font-size:12px;max-width:560px;line-height:1.8}
 
     footer{background:#080807;border-top:0.5px solid #1a1408;padding:1.25rem 2rem;display:flex;justify-content:space-between;align-items:center;color:#2a2010}
 
@@ -132,6 +131,234 @@
       header{padding:10px 16px}
     }
 
+    /* ─── Floating Footer ─────────────────────────────────── */
+
+    .floating-footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 90;
+      background: #0d0c07;
+      border-top: 0.5px solid #2a2210;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+      padding: 0;
+
+      /* Hidden by default — slides up on scroll past hero */
+      transform: translateY(100%);
+      transition: transform 0.4s ease;
+    }
+
+    /* Visible state */
+    .floating-footer.ff-visible {
+      transform: translateY(0);
+    }
+
+    /* Dismissed state — collapses to slim brand bar */
+    .floating-footer.ff-dismissed {
+      height: 32px;
+    }
+
+    .floating-footer.ff-dismissed .ff-right,
+    .floating-footer.ff-dismissed .ff-dismiss,
+    .floating-footer.ff-dismissed .ff-divider {
+      display: none;
+    }
+
+    .ff-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 4rem;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+      height: 100%;
+      position: relative;
+    }
+
+    /* Left side */
+    .ff-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-shrink: 0;
+    }
+
+    .ff-brand {
+      font-family: 'Josefin Sans', sans-serif;
+      font-weight: 100;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      white-space: nowrap;
+    }
+
+    .ff-brand strong {
+      font-weight: 700;
+      letter-spacing: 0.18em;
+    }
+
+    .ff-divider {
+      width: 0.5px;
+      height: 16px;
+      background: #1e1a0e;
+      flex-shrink: 0;
+    }
+
+    .ff-copy {
+      font-size: 10px;
+      color: var(--muted-dark);
+      font-family: 'Inter', sans-serif;
+      white-space: nowrap;
+    }
+
+    /* Right side — newsletter */
+    .ff-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+      margin-left: auto;
+    }
+
+    .ff-right form {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .ff-input {
+      background: #1a1810;
+      border: 0.5px solid #2a2210;
+      border-radius: 2px;
+      padding: 6px 10px;
+      font-size: 11px;
+      color: #8a7a50;
+      font-family: 'Inter', sans-serif;
+      outline: none;
+      width: 180px;
+      transition: border-color 0.15s;
+    }
+
+    .ff-input::placeholder {
+      color: #3a2c10;
+    }
+
+    .ff-input:focus {
+      border-color: #3a3020;
+    }
+
+    .ff-subscribe {
+      font-family: 'Josefin Sans', sans-serif;
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 7px 16px;
+      background: #d4a832;
+      border: none;
+      color: #000000;
+      border-radius: 2px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: opacity 0.15s;
+    }
+
+    .ff-subscribe:hover {
+      opacity: 0.85;
+    }
+
+    .ff-subscribe:disabled {
+      background: #2a2210;
+      color: #1a1408;
+      cursor: default;
+      opacity: 1;
+    }
+
+    /* Success message */
+    .ff-success {
+      font-family: 'Josefin Sans', sans-serif;
+      font-weight: 100;
+      font-size: 9px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #4a6a28;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Dismiss button */
+    .ff-dismiss {
+      font-size: 13px;
+      color: #2a2010;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px 6px;
+      flex-shrink: 0;
+      line-height: 1;
+      transition: color 0.15s;
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .ff-dismiss:hover {
+      color: #4a3a18;
+    }
+
+    /* ─── Mobile adjustments ──────────────────────────────── */
+    @media (max-width: 767px) {
+      .floating-footer {
+        height: auto;
+        min-height: 56px;
+        gap: 8px;
+      }
+
+      .ff-inner {
+        padding: 10px 1.25rem;
+        flex-wrap: wrap;
+        height: auto;
+      }
+
+      .ff-dismiss {
+        right: 8px;
+      }
+
+      .ff-right form {
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+
+      .ff-input {
+        width: 180px;
+      }
+
+      .ff-left {
+        width: 100%;
+      }
+
+      .floating-footer.ff-dismissed {
+        height: auto;
+        min-height: 32px;
+      }
+    }
+
+    @media (min-width: 768px) and (max-width: 1399px) {
+      .ff-inner {
+        padding: 0 3rem;
+      }
+    }
+
     @media (prefers-reduced-motion: no-preference){
       .ornament{animation:fadeUp .6s ease forwards .0s}
       .brand{animation:fadeUp .6s ease forwards .5s}
@@ -142,6 +369,13 @@
       @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(7px)}}
       .chevron{animation:bounce 2s infinite}
     }
+
+    /* ─── Respect reduced motion ──────────────────────────── */
+    @media (prefers-reduced-motion: reduce) {
+      .floating-footer {
+        transition: none;
+      }
+    }
   </style>
 </head>
 <body>
@@ -149,26 +383,19 @@
   <header>
     <div class="content-wrap" style="display:flex;align-items:center;justify-content:space-between;">
       <div id="logo-slot">NIHANG SINGH <span class="armory-bold">ARMORY</span></div>
-      <div id="search-wrap">
-        <button id="search-toggle" type="button" aria-expanded="false" aria-label="Search">
-        <!-- inline magnifier -->
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 21l-4.35-4.35" stroke="#3a2c10" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="11" cy="11" r="6" stroke="#3a2c10" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </button>
-      <input id="search-input" type="search" placeholder="Search the collection…" aria-label="Search the collection">
-    </div>
     </div>
   </header>
 
   <section class="hero" id="hero">
     <video id="hero-video" muted loop playsinline>
-      <source src="images/Hero.mp4" type="video/mp4">
+      <source src="https://d31u72jjifwhxm.cloudfront.net/video/hero.mp4" type="video/mp4">
     </video>
     <div class="hero-content">
-      <div class="ornament">Est. — The Khalsa Tradition</div>
+      <div class="ornament">Est. 1699 — The Khalsa Tradition</div>
       <div class="brand">NIHANG SINGH <span class="armory-bold">ARMORY</span></div>
       <div class="divider-gold"></div>
       <div class="tagline">CENTURIES OF STEEL · LEGACY OF THE FEARLESS</div>
-      <p class="hero-desc">A curated collection of antique blades honoring the sovereign warrior tradition of the Nihang — guardians of the Khalsa, keepers of the eternal flame.</p>
+      <p class="hero-desc">A curated collection of antique blades honoring the sovereign warrior tradition of the Nihang Singhs — guardians of the Khalsa, keepers of the eternal flame.</p>
     </div>
     <div class="chevron" id="chev" aria-hidden="true">
       <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -252,8 +479,8 @@
   <section class="about">
     <div class="content-wrap">
       <div class="label">THE COLLECTOR</div>
-      <div class="title">ABOUT THE ARMORY</div>
-      <p>This collection is a lifelong pursuit of preserving the martial heritage of the Nihang Singh — the sovereign warrior order of the Khalsa. Each blade is chosen not only for its craftsmanship but for its place in a living history that stretches across centuries and continents.</p>
+      <div class="title">ABOUT THE <strong>ARMORY</strong></div>
+      <p>This collection is a lifelong pursuit of preserving the martial heritage of the Nihang Singhs — the sovereign warrior order of the Khalsa. Each blade is chosen not only for its craftsmanship but for its place in a living history that stretches across centuries and continents.</p>
     </div>
   </section>
 
@@ -303,12 +530,53 @@
     </div>
   </div>
 
+  <!-- Floating Footer -->
+  <footer id="floating-footer" class="floating-footer" aria-label="Site footer and newsletter signup">
+    <div class="ff-inner">
+
+    <!-- Left: brand + copyright -->
+    <div class="ff-left">
+      <span class="ff-brand">Nihang Singh <strong>Armory</strong></span>
+      <span class="ff-divider" aria-hidden="true"></span>
+    </div>
+
+    <!-- Right: newsletter form -->
+    <div class="ff-right" id="ff-newsletter">
+      <form
+        id="ff-form"
+        action="https://formspree.io/f/mojoqdyg"
+        method="POST"
+      >
+        <input type="hidden" name="_subject" value="New newsletter subscriber — Nihang Singh Armory" />
+        <input
+          class="ff-input"
+          type="email"
+          name="email"
+          placeholder="Email address"
+          autocomplete="email"
+          required
+          aria-label="Email address"
+        />
+        <button class="ff-subscribe" type="submit">Subscribe</button>
+      </form>
+
+      <!-- Success message (hidden until submitted) -->
+      <div class="ff-success" id="ff-success" aria-live="polite" style="display:none">
+        <i class="ti ti-check" aria-hidden="true"></i>
+        You're on the list. Thank you.
+      </div>
+    </div>
+
+    <!-- Dismiss button -->
+    <button class="ff-dismiss" id="ff-dismiss" aria-label="Dismiss footer">✕</button>
+
+    </div>
+
+  </footer>
+
   <script>
     // Basic interactive behaviors
     (function(){
-      const searchWrap = document.getElementById('search-wrap');
-      const searchToggle = document.getElementById('search-toggle');
-      const searchInput = document.getElementById('search-input');
       const chev = document.getElementById('chev');
       const gallery = document.getElementById('gallery');
       const overlay = document.getElementById('overlay');
@@ -319,13 +587,7 @@
       const form = document.getElementById('contact-form');
       const sendBtn = document.getElementById('send-btn');
 
-      // search toggle
-      searchToggle.addEventListener('click',()=>{
-        const open = searchWrap.classList.toggle('open');
-        searchToggle.setAttribute('aria-expanded', open);
-        if(open) searchInput.focus();
-      });
-      document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ if(searchWrap.classList.contains('open')){searchWrap.classList.remove('open'); searchToggle.setAttribute('aria-expanded',false)} if(overlay.classList.contains('show')) closeOverlay(); }});
+      document.addEventListener('keydown', e=>{ if(e.key==='Escape' && overlay.classList.contains('show')) closeOverlay(); });
 
       // chevron scroll
       chev.addEventListener('click',()=>{document.querySelector('#gallery').scrollIntoView({behavior:'smooth'})});
@@ -397,7 +659,7 @@
             if(images.length){
               const imgEl = document.createElement('img');
               imgEl.className = 'sword-photo main-image';
-              imgEl.src = './images/'+images[0];
+              imgEl.src = images[0].startsWith('http') ? images[0] : 'https://d31u72jjifwhxm.cloudfront.net/images/'+images[0];
               imgEl.alt = s.name;
               imgEl.addEventListener('load', ()=>{ imgEl.style.display=''; placeholder.style.display='none'; });
               imgEl.addEventListener('error', ()=>{ imgEl.style.display='none'; placeholder.style.display='flex'; });
@@ -416,7 +678,7 @@
                 thumb.className = 'thumb';
                 thumb.dataset.index = i;
                 const thumbImg = document.createElement('img');
-                thumbImg.src = './images/'+imageName;
+                thumbImg.src = imageName.startsWith('http') ? imageName : 'https://d31u72jjifwhxm.cloudfront.net/images/'+imageName;
                 thumbImg.alt = s.name + ' thumbnail ' + (i+1);
                 thumbImg.addEventListener('error', ()=>{
                   thumbImg.style.display='none';
@@ -469,17 +731,6 @@
             } else btn.addEventListener('click',()=>openModal(name,btn));
           });
 
-          // search filtering
-          searchInput.addEventListener('input', ()=>{
-            const q = searchInput.value.trim().toLowerCase();
-            let any=false;
-            document.querySelectorAll('.sword-block').forEach(sec=>{
-              const txt = (sec.textContent||'').toLowerCase();
-              if(!q || txt.indexOf(q)!==-1){ sec.style.display='grid'; any=true;} else sec.style.display='none';
-            });
-            document.getElementById('no-results').style.display = any? 'none':'block';
-          });
-
         }catch(err){console.warn('Could not load swords.json',err)}
       }
 
@@ -494,7 +745,7 @@
         function goTo(index){
           current = (index + images.length) % images.length;
           if(mainImg){
-            mainImg.src = './images/' + images[current];
+            mainImg.src = images[current].startsWith('http') ? images[current] : 'https://d31u72jjifwhxm.cloudfront.net/images/'+images[current];
             mainImg.style.display = '';
             if(placeholder) placeholder.style.display = 'none';
           }
@@ -517,6 +768,79 @@
       const hv = document.getElementById('hero-video');
       if(hv && typeof hv.play === 'function') hv.play().catch(()=>{});
       loadAndRender();
+    })();
+
+    // ─── Floating Footer ──────────────────────────────────────
+
+    (function () {
+      const footer   = document.getElementById('floating-footer');
+      const dismissBtn = document.getElementById('ff-dismiss');
+      const form     = document.getElementById('ff-form');
+      const success  = document.getElementById('ff-success');
+      const newsletter = document.getElementById('ff-newsletter');
+      const hero     = document.getElementById('hero') ||
+                       document.querySelector('.hero');
+
+      if (!footer || !hero) return;
+
+      // ── 1. Show footer once user scrolls past the hero ──────
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          if (!entry.isIntersecting) {
+            // Hero has left the viewport — show footer
+            footer.classList.add('ff-visible');
+          } else {
+            // Hero is visible — hide footer
+            footer.classList.remove('ff-visible');
+          }
+        },
+        { threshold: 0 }
+      );
+      observer.observe(hero);
+
+      // ── 2. Dismiss button — collapses for session ────────────
+      // Check if already dismissed this session
+      if (sessionStorage.getItem('ff-dismissed') === 'true') {
+        footer.classList.add('ff-dismissed');
+      }
+
+      dismissBtn.addEventListener('click', () => {
+        footer.classList.add('ff-dismissed');
+        sessionStorage.setItem('ff-dismissed', 'true');
+      });
+
+      // ── 3. Form submission via Formspree (fetch) ─────────────
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const submitBtn = form.querySelector('.ff-subscribe');
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Sending…';
+
+        try {
+          const response = await fetch(form.action, {
+            method: 'POST',
+            body: new FormData(form),
+            headers: { 'Accept': 'application/json' }
+          });
+
+          if (response.ok) {
+            // Show success, hide form
+            form.style.display = 'none';
+            success.style.display = 'flex';
+          } else {
+            // Re-enable button on error
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Subscribe';
+            console.error('Formspree error:', await response.text());
+          }
+        } catch (err) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Subscribe';
+          console.error('Network error:', err);
+        }
+      });
+
     })();
   </script>
 </body>

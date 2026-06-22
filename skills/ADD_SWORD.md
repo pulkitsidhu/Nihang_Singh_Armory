@@ -27,7 +27,7 @@ Ask the user for the following, one at a time or all at once if they provide the
 | era      | Yes      | Date or century (e.g. "17th Century") |
 | specs    | Yes      | Up to 4 bullet specs (material, length, condition, etc.) |
 | story    | Yes      | 2–4 sentences of provenance and history |
-| images   | Yes      | Ask user to drag/drop image files into the chat |
+| images   | Yes      | Ask user for the image filename(s) in the S3 bucket (e.g. `mughal-talwar-004-1.jpg`) |
 | order    | Yes      | Which position in the scroll (1 = top). Ask: "Where should this appear in the collection? Enter a number — for example, 1 for the very top, or leave blank to add it at the end." |
 
 ## Step 2 — Handle scroll position
@@ -42,10 +42,22 @@ Ask the user for the following, one at a time or all at once if they provide the
 
 ## Step 3 — Handle images
 
-- Save uploaded images to the `images/` folder
-- Name them using the pattern: `{id}-{n}.jpg` where id is a slugified version of the sword name (lowercase, hyphens, no spaces) and n is 1, 2, 3…
-- Example: "Mughal Talwar" → `mughal-talwar-004-1.jpg`, `mughal-talwar-004-2.jpg`
-- Add all image filenames to the `images` array in the JSON entry
+- Ask the user to provide the exact image filename(s) in the S3 bucket
+- If the files are not uploaded yet, ask the user to upload each image to S3 using AWS CLI:
+
+```bash
+aws s3 cp {filename} s3://nihang-singh-armory/{filename}
+```
+
+- Confirm upload succeeded before proceeding (if upload was needed)
+- Reference images in swords.json as full CloudFront URLs:
+
+```
+https://d31u72jjifwhxm.cloudfront.net/images/{filename}
+```
+
+- Naming convention: {slug}-{zero-padded-number}-{n}.jpg
+  Example: mughal-talwar-004-1.jpg, mughal-talwar-004-2.jpg
 
 ## Step 4 — Generate the entry
 
