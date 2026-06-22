@@ -123,7 +123,8 @@
 
     @media (max-width:767px){
       .sword-block{padding-top:2rem;padding-bottom:2rem}
-      .sword-grid{grid-template-columns:1fr;padding:0}
+      .sword-grid{display:flex;flex-direction:column;padding:0}
+      .sword-block.light .sword-grid{flex-direction:column-reverse}
       .content-wrap{padding:0 1.25rem}
       .sword-image{aspect-ratio:16/9}
       .brand{font-size:28px}
@@ -328,6 +329,7 @@
         padding: 10px 1.25rem;
         flex-wrap: wrap;
         height: auto;
+        justify-content: center;
       }
 
       .ff-dismiss {
@@ -345,6 +347,18 @@
 
       .ff-left {
         width: 100%;
+        justify-content: center;
+        text-align: center;
+      }
+
+      .ff-right {
+        width: 100%;
+        justify-content: center;
+        margin-left: 0;
+      }
+
+      .ff-right form {
+        justify-content: center;
       }
 
       .floating-footer.ff-dismissed {
